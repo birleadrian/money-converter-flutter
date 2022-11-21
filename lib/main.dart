@@ -97,8 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   TextField(
                     controller: myController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     onChanged: (String input) {
                       setState(() {
                         if (input.isEmpty) {
@@ -108,8 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           inputValue = double.tryParse(input);
                           if (inputValue == null) {
                             sum = 0;
-                            error =
-                                'Incorrect format - Please enter only numbers';
+                            error = 'Incorrect format - Please enter only numbers';
                           } else {
                             error = null;
                           }
