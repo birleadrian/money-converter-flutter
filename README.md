@@ -1,6 +1,6 @@
 # money_converter
 
-A converter with 2 currencies : EUR and RON.
+A converter with 2 currencies : EUR and RON using Flutter.
 
 ## Getting Started
 
