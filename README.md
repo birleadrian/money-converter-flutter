@@ -1,6 +1,6 @@
 # money_converter
 
-A RON to EUR converter.
+A converter with 2 currencies : EUR and RON.
 
 ## Getting Started
 
