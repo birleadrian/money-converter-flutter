@@ -33,17 +33,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double _sum = 0.0;
   String _convertFrom = "Convert from RON to EUR";
+  String? error;
+  double? aux;
   final String _convertFromEur = "Convert from EUR to RON";
   final String _convertFromRon = "Convert from RON to EUR";
   String _currencyNo1 = "RON";
   String _currencyNo2 = "EUR";
   final myController = TextEditingController();
-  final myControllerEur = TextEditingController();
 
   @override
   void dispose() {
     myController.dispose();
-    myControllerEur.dispose();
     super.dispose();
   }
 
@@ -51,14 +51,12 @@ class _MyHomePageState extends State<MyHomePage> {
     if (myController.text.isNotEmpty) {
       if (_currencyNo1 == "RON") {
         _sum = double.parse(myController.text) / 4.9;
-        myControllerEur.text = _sum.toStringAsFixed(2);
       } else {
         _sum = double.parse(myController.text) * 5.0;
-        myControllerEur.text = _sum.toStringAsFixed(2);
       }
     } else {
       _sum = 0.0;
-      myControllerEur.text = "";
+      myController.text = "";
     }
   }
 
@@ -90,55 +88,67 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.network("https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2021/06/getty_currency-exchange_062321.jpeg.jpg"),
-            Text(
-              _convertFrom,
-            ),
-            Column(children: <Widget>[
-              TextField(
-                controller: myController,
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+            children: <Widget>[
+              Image.network("https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2021/06/getty_currency-exchange_062321.jpeg.jpg"),
+              Text(
+                _convertFrom,
+              ),
+              Column(children: <Widget>[
+                TextField(
+                  controller: myController,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  onChanged: (String input){
+                    setState(() => {
+                      if(input.isEmpty){
+                        error = "Please enter a number",
+                        _sum = 0
+                      } else {
+                        error = null,
+                         aux = double.tryParse(input),
+                        if(aux == null){
+                          _sum = 0,
+                          error = "Incorrect format - Please enter only numbers"
+                    }
+                    }
+                    });
+                  },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    hintText: _currencyNo1,
+                    errorText: error,
                   ),
-                  hintText: _currencyNo1,
+                  // onChanged: (String input){
+                  //   setState(() => {
+                  //     final double? value = double.tryParse(input);
+                  //     if(value == null){
+                  //       error = "Please insert a valid number.";
+                  //       _sum = 0;
+                  //     }
+                  //   });
+                  // },
                 ),
+              ]),
+              Text(
+                '${_sum.toStringAsFixed(2)} $_currencyNo2',
+                style: Theme.of(context).textTheme.headline4,
               ),
-              TextField(
-                controller: myControllerEur,
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  hintText: _currencyNo2,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.lightBlue, // foreground
                 ),
-              ),
-            ]),
-            Text(
-              // myController.text,
-              '${myControllerEur.text} $_currencyNo2',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.lightBlue, // foreground
-              ),
-              onPressed: _convert,
-              child: const Text('Convert'),
-            )
-          ],
+                onPressed: _convert,
+                child: const Text('Convert'),
+              )
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
